@@ -912,9 +912,12 @@ render();
 <script>
 (function(){
   try{if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}
+  const goDevis=/(^|[?&])devis\b/.test(location.search.slice(1))||/^#(devis|faq)$/.test(location.hash);
+  const goFaq=location.hash==="#faq";
   if(location.hash){try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}}
-  window.scrollTo(0,0);
-  window.addEventListener("load",()=>window.scrollTo(0,0));
+  const jump=()=>{const t=goFaq?document.getElementById("faq"):(document.querySelector(".byo")||document.getElementById("devis"));if(t){const y=t.getBoundingClientRect().top+window.scrollY-60;window.scrollTo(0,y);}};
+  if(goDevis){window.addEventListener("load",()=>{jump();setTimeout(jump,350);});document.addEventListener("DOMContentLoaded",jump);}
+  else{window.scrollTo(0,0);window.addEventListener("load",()=>window.scrollTo(0,0));}
   document.addEventListener("click",e=>{
     const a=e.target.closest('a[href^="#"]');if(!a)return;
     const t=document.querySelector(a.getAttribute("href"));if(!t)return;
